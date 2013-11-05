@@ -1,0 +1,31 @@
+{
+  "name": "karma-exposure-preprocessor",
+  "version": "0.1.0",
+  "description": "A Karma plugin. Injects code to RequireJS module in order to expose private data.",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/laboro/karma-exposure-preprocessor.git"
+  },
+  "keywords": [
+    "karma-plugin",
+    "karma-preprocessor",
+    "requirejs"
+  ],
+  "dependencies": {
+      "escodegen": "0.0.23",
+      "esprima": "~1.0.2",
+      "estraverse": "~0.0.4",
+      "lodash": "~1.1"
+  },
+  "peerDependencies": {
+    "karma": ">=0.9"
+  },
+  "license": "MIT",
+  "contributors": [],
+  "readme": "ERROR: No README data found!",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/laboro/karma-exposure-preprocessor/issues"
+  }
+}
