@@ -5,7 +5,7 @@
 Preprocessor looks through module content for ```@export %module_name%``` JSDoc declaration and (if it exists) injects piece of code into module definition callback which allows to get access to private variable and functions. By default the injection is:
 
 ```js
-require.exec('contexts["_"]["defined"]')['%module_name%/exposure'] = eval;
+require.exec('contexts["_"]["defined"]')['%module_name%/exposure'] = function(expr){ return eval(expr); };
 ```
 ### Installation
 Requires Karma 0.9+
@@ -29,7 +29,7 @@ module.exports = function(config) {
     
     exposurePreprocessor: {
       // by default, where ''%module_name%' is a placeholder for a real module name
-      // injection: 'require.exec(\'contexts["_"]["defined"]\')[\'%module_name%/exposure\'] = eval;'
+      // injection: 'require.exec(\'contexts["_"]["defined"]\')[\'%module_name%/exposure\']=function(expr){return eval(expr)};'
     },
     
     plugins: [
