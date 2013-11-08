@@ -1,4 +1,4 @@
-# karma-exposure-preprocessor
+# karma-requirejs-exposure
 
 > Preprocessor to inject exposure code inside RequireJS module, which allows to test private functional
 
@@ -17,24 +17,29 @@ Next you need to create a configuration file using karma init
 // karma.conf.js
 module.exports = function(config) {
   config.set({
+    frameworks: ['jasmine', 'requirejs-exposure', 'requirejs'],
+
     preprocessors: {
-      '**/*.js': ['exposure']
+      '**/*.js': ['requirejs-exposure']
     },
 
     files: [
       '*.js'
     ],
-    
-    exposurePreprocessor: {
-      // variable name used for exchanging data between scopes of Spec and tested module
-      // by default it's __ns__
-      namespace: '__ns__'
+
+    client: {
+        requirejsExposure: {
+            // name of transfer-object, used for exchanging data between scopes of Spec and tested module
+            // by default it's __ns__
+            namespace: '__ns__'
+        }
     },
     
     plugins: [
       'karma-requirejs',
+      'karma-jasmine',
       'karma-phantomjs-launcher',
-      'karma-exposure-preprocessor'
+      'karma-requirejs-exposure'
     ]
   });
 };
