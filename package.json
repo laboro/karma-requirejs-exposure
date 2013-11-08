@@ -1,6 +1,6 @@
 {
-  "name": "karma-exposure-preprocessor",
-  "version": "0.1.1",
+  "name": "karma-requirejs-exposure",
+  "version": "0.1.0",
   "description": "A Karma plugin. Injects code to RequireJS module in order to expose private data.",
   "main": "lib/index.js",
   "repository": {
@@ -19,7 +19,8 @@
       "lodash": "~1.1"
   },
   "peerDependencies": {
-    "karma": ">=0.9"
+    "karma": ">=0.9",
+    "karma-requirejs": ">=0.1.0"
   },
   "license": "MIT",
   "contributors": [],
