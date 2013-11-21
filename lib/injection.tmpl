@@ -1,0 +1,6 @@
+requirejsExposure.register("<%= module %>", {
+  <% _.each(vars, function (name) { %>
+    get<%= name %>: function () {return <%= name %>;},
+    set<%= name %>: function () {<%= name %> = arguments[0];},
+  <% }); %>
+});
