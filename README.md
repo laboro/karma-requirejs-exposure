@@ -1,10 +1,12 @@
 # karma-requirejs-exposure
 
-> Preprocessor to inject exposure code inside RequireJS module, which allows to test private functional
+> Karma's plugin which allows to test private functional of AMD-modules
 
-Preprocessor looks through module content for ```@export %module_name%``` JSDoc notation and (if it exists) injects piece of code into module definition callback, which allows to get access to private variable and functions.
+Contains:
+ - Preprocessor, which looks through module content for ```@export %module_name%``` JSDoc notation and (if it exists) injects piece of code into module definition callback.
+ - Client lib allows to get access to private variable and functions from spec.
 
-### Installation
+## Installation
 Requires Karma 0.9+
 
 To use this with karma, first you will need to install it with npm
@@ -27,14 +29,6 @@ module.exports = function(config) {
       '*.js'
     ],
 
-    client: {
-        requirejsExposure: {
-            // name of transfer-object, used for exchanging data between scopes of Spec and tested module
-            // by default it's __ns__
-            namespace: '__ns__'
-        }
-    },
-    
     plugins: [
       'karma-requirejs',
       'karma-jasmine',
@@ -44,3 +38,65 @@ module.exports = function(config) {
   });
 };
 ```
+
+## Example
+Let's take `some/module.js` module:
+```js
+define(function () {
+  var foo = {};
+  foo.do = function () {};
+
+  /**
+   * @export some/module
+   */
+  return {
+    doSomething: function () {
+      foo.do();
+    }
+  };
+});
+```
+
+And try to test private `foo` object. [Jasmine](http://pivotal.github.io/jasmine/) spec for that module will be:
+```js
+define(['some/module', 'requirejs-exposure'],
+function(module, requirejsExposure) {
+  // get exposure instance for tested module
+  var exposure = requirejsExposure.disclose('some/module');
+
+  describe('some/module', function () {
+    var foo;
+    // save original value of foo variable
+    exposure.backup('foo');
+
+    beforeEach(function () {
+      // create mock object with stub method 'do'
+      foo = jasmine.createSpyObj('foo', ['do']);
+      // before each test, pass it off instead of original
+      exposure.substitute('foo').by(foo);
+    });
+    afterEach(function () {
+        // after each test restore original value of foo
+        exposure.recover('foo');
+    });
+
+    it('check doSomething() method', function() {
+      // private foo object is successfully replaced by mock
+      expect(exposure.retrieve('foo')).toBe(foo);
+      // mean time, original object is safe
+      expect(exposure.retrieve('foo')).not.toBe(exposure.original('foo'));
+
+      module.doSomething();
+
+      // stub method of mock object has been called
+      expect(foo.do).toHaveBeenCalled();
+      // this is the same as previous assertion
+      expect(exposure.retrieve('foo')).toHaveBeenCalled();
+      //but original method never touched
+      expect(exposure.original('foo')).not.toHaveBeenCalled();
+    });
+  });
+});
+```
+
+Also `karma-requirejs-exposure` plugin very useful for mocking depended on modules. It works the same way for any named argument of `define()` callback (as well `require()` and `requirejs()`), private variable or function.
