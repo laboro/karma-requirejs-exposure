@@ -57,7 +57,7 @@ define(function () {
 });
 ```
 
-And try to test private `foo` object. [Jasmine](http://pivotal.github.io/jasmine/) spec for that module will be:
+And try to test private `foo` object. [Jasmine](http://jasmine.github.io/) spec for that module will be:
 ```js
 define(['some/module', 'requirejs-exposure'],
 function(module, requirejsExposure) {
