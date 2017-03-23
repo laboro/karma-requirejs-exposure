@@ -1,7 +1,8 @@
 {
   "name": "karma-requirejs-exposure",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Karma plugin. Injects code to RequireJS module in order to expose private data.",
+  "license": "MIT",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
@@ -13,19 +14,26 @@
     "requirejs"
   ],
   "dependencies": {
-      "escodegen": "0.0.23",
-      "esprima": "~1.0.2",
-      "estraverse": "~0.0.4",
-      "lodash": "~1.1"
+    "escodegen": "^1.8.1",
+    "esprima": "^3.1.3",
+    "estraverse": "^4.2.0",
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "karma": ">=0.9",
-    "karma-requirejs": ">=0.1.0"
+    "karma-requirejs": ">=0.1.0",
+    "requirejs": ">=2.1.0"
   },
-  "license": "MIT",
-  "contributors": [],
-  "readme": "ERROR: No README data found!",
   "readmeFilename": "README.md",
+  "devDependencies": {
+    "eslint": "^3.18.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "bugs": {
     "url": "https://github.com/laboro/karma-exposure-preprocessor/issues"
   }
