@@ -26,13 +26,25 @@
   },
   "readmeFilename": "README.md",
   "devDependencies": {
+    "brfs": "^1.4.3",
+    "browserify": "^14.1.0",
     "eslint": "^3.18.0",
     "eslint-config-standard": "^7.1.0",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^2.1.1"
+    "eslint-plugin-standard": "^2.1.1",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.5.0",
+    "karma-browserify": "^5.1.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-requirejs": "^1.1.0",
+    "requirejs": "^2.3.3",
+    "watchify": "^3.9.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "./node_modules/.bin/eslint ./**/*.js",
+    "test": "./node_modules/.bin/karma start --single-run"
   },
   "bugs": {
     "url": "https://github.com/laboro/karma-exposure-preprocessor/issues"
