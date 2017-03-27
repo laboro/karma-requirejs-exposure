@@ -1,4 +1,3 @@
-/* global define */
 define('requirejs-exposure', function () {
   'use strict';
 

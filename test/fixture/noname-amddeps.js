@@ -1,4 +1,3 @@
-/* global define */
 define(['number-four', 'number-tree'], function (four, tree) {
   'use strict';
 

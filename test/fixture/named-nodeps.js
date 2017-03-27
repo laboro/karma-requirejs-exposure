@@ -1,4 +1,3 @@
-/* global define */
 define('named-nodeps', function () {
   'use strict';
 
