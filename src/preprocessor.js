@@ -1,12 +1,11 @@
 var _ = require('lodash');
-var path = require('path');
 var esprima = require('esprima');
 var estraverse = require('estraverse');
 var escodegen = require('escodegen');
+var path = require('path');
 var fs = require('fs');
 
-var tmpl = path.join(__dirname, '/injection.tmpl');
-var injectionTmpl = _.template(fs.readFileSync(tmpl, {encoding: 'utf8'}));
+var injectionTmpl = _.template(fs.readFileSync(path.join(__dirname, '/injection.tmpl'), 'utf8'));
 
 /**
  * Generates exposure code and injects is into definition callback body
@@ -36,7 +35,7 @@ function modifyDefinition (moduleName, dependency, callback) {
  */
 function isUseStrict (node) {
   return node && node.type === 'ExpressionStatement' &&
-    _.isEqual(node.expression, {type: 'Literal', value: 'use strict'});
+    _.isMatch(node.expression, {type: 'Literal', value: 'use strict'});
 }
 
 /**

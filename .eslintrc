@@ -2,7 +2,10 @@
   "env": {
     "node": true
   },
-  "extends": "standard",
+  "extends": "plugin:requirejs/recommended",
+  "plugins": [
+    "requirejs"
+  ],
   "rules": {
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
