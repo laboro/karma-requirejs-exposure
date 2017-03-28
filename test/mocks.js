@@ -4,6 +4,30 @@ Object.setPrototypeOf = Object.setPrototypeOf || function (obj, proto) {
   return obj;
 };
 
+var definitionUtils = {
+  /**
+   * Check if module definition callback function is in AMD format
+   *
+   * @param {function} definitionCallback
+   * @returns {boolean}
+   */
+  isAMD: function (definitionCallback) {
+    return !definitionCallback.toString()
+      .match(/^function\s*\(\s*require\s*(,\s*exports\s*(,\s*module\s*)?)?\)\s*{\s*/);
+  },
+
+  /**
+   * Check if module has a name in its definition
+   *
+   * @param {string} moduleDefinition source code of module definition
+   * @returns {boolean}
+   */
+  isNamed: function (moduleDefinition) {
+    return moduleDefinition
+      .match(/define\(\s*'[\w\-_\/]+'\s*,/);
+  }
+};
+
 function DefinitionContext () {
   this._modules = {};
   this._definitions = {};
@@ -14,11 +38,8 @@ function DefinitionContext () {
   return this;
 }
 
-DefinitionContext.isAMD = function (callback) {
-  return !callback.toString().match(/^function\s*\(\s*require\s*\)\s*\{\s*/);
-};
-
 DefinitionContext.prototype.constructor = DefinitionContext;
+
 DefinitionContext.prototype.require = function (name) {
   var module;
   if (name in this._modules) {
@@ -64,7 +85,7 @@ DefinitionContext.prototype.define = function (name, deps, callback) {
 
   this._definitions[name] = function (require) {
     var depsModules;
-    if (DefinitionContext.isAMD(callback)) {
+    if (definitionUtils.isAMD(callback)) {
       depsModules = deps ? deps.map(require) : null;
     } else {
       depsModules = [require];

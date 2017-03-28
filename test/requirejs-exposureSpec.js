@@ -1,7 +1,8 @@
 /* global __globalDefinitionContext__ */
 var path = require('path');
 var fs = require('fs');
-var exposurePreprocessor = require('../src/preprocessor');
+var using = require('jasmine-data-provider');
+var preprocessor = require('../src/preprocessor')();
 var modules = {
   'named-nodeps': fs.readFileSync(path.join(__dirname, '/fixture/named-nodeps.js'), 'utf8'),
   'noname-amddeps': fs.readFileSync(path.join(__dirname, '/fixture/noname-amddeps.js'), 'utf8'),
@@ -9,27 +10,22 @@ var modules = {
   'noname-nodeps': fs.readFileSync(path.join(__dirname, '/fixture/noname-nodeps.js'), 'utf8')
 };
 
+
 describe('karma preprocessor', function () {
-  var preprocessor;
-
-  beforeEach(function () {
-    preprocessor = exposurePreprocessor();
-  });
-
-  for (var moduleType in modules) {
-    if (!modules.hasOwnProperty(moduleType)) {
-      continue;
-    }
-
+  using(modules, function (initialModuleDefinition, moduleType) {
     describe('"' + moduleType + '" module', function () {
       var module;
       var exposedModule;
 
       beforeEach(function (done) {
-        preprocessor(modules[moduleType], '', function (content) {
+        preprocessor(initialModuleDefinition, '', function (changedModuleDefinition) {
           var context = __globalDefinitionContext__.newDescendantContext();
-          var define = context.define.bind(context, moduleType); // eslint-disable-line no-unused-vars
-          eval(content); // eslint-disable-line no-eval
+          var bindArgs = [context];
+          if (!definitionUtils.isNamed(initialModuleDefinition)) {
+            bindArgs.push(moduleType);
+          }
+          var define = context.define.bind.apply(context.define, bindArgs); // eslint-disable-line no-unused-vars
+          eval(changedModuleDefinition); // eslint-disable-line no-eval
           module = context.require(moduleType);
           exposedModule = context.require('requirejs-exposure').disclose(moduleType);
           done();
@@ -77,5 +73,5 @@ describe('karma preprocessor', function () {
         });
       });
     });
-  }
+  });
 });

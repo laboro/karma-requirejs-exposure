@@ -34,6 +34,7 @@
     "eslint-plugin-requirejs": "^3.1.1",
     "eslint-plugin-standard": "^2.1.1",
     "jasmine-core": "^2.5.2",
+    "jasmine-data-provider": "^2.2.0",
     "karma": "^1.5.0",
     "karma-browserify": "^5.1.1",
     "karma-chrome-launcher": "^2.0.0",
