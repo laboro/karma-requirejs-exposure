@@ -3,12 +3,12 @@ define(function (require) {
 
   var five = 5;
   var four = require('number-four');
-  var tree = require('number-tree');
+  var three = require('number-three');
 
   /**
    * @export noname-commonjsdeps
    */
   return function () {
-    return five + four + tree;
+    return five + four + three;
   };
 });

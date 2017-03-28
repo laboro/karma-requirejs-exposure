@@ -5,14 +5,13 @@ Object.setPrototypeOf = Object.setPrototypeOf || function (obj, proto) {
 };
 
 function DefinitionContext () {
-  var newContext = function () {
-    var context = Object.setPrototypeOf({}, this);
-    context.modules = {};
-    context.newDescendantContext = newContext.bind(context);
-    return context;
+  this._modules = {};
+  this._definitions = {};
+  this.newDescendantContext = function () {
+    var context = Object.setPrototypeOf({parentContext: this}, this);
+    return DefinitionContext.call(context);
   };
-  this.modules = {};
-  this.newDescendantContext = newContext.bind(this);
+  return this;
 }
 
 DefinitionContext.isAMD = function (callback) {
@@ -21,8 +20,29 @@ DefinitionContext.isAMD = function (callback) {
 
 DefinitionContext.prototype.constructor = DefinitionContext;
 DefinitionContext.prototype.require = function (name) {
-  // name have not to be 'require', 'define' or 'modules'
-  return this[name];
+  var module;
+  if (name in this._modules) {
+    // if module is already built
+    module = this._modules[name];
+  } else {
+    // build module from definition and store it in current context
+    var definition = this._getDefinition(name);
+    module = this._modules[name] = definition(this.require.bind(this));
+  }
+  return module;
+};
+
+DefinitionContext.prototype._getDefinition = function (name) {
+  var definition;
+  if (name in this._definitions) {
+    definition = this._definitions[name];
+  } else if (this.parentContext) {
+    definition = this.parentContext._getDefinition(name);
+  }
+  if (!definition) {
+    throw new Error('Module "' + name + '" is not defined yet');
+  }
+  return definition;
 };
 
 DefinitionContext.prototype.define = function (name, deps, callback) {
@@ -42,25 +62,15 @@ DefinitionContext.prototype.define = function (name, deps, callback) {
 
   name = name || (callback.toString().match(/\s@export\s+(\S+)/) || [])[1];
 
-  Object.defineProperty(this, name, {
-    get: function () {
-      var module;
-      var depsModules;
-      var require;
-      if (name in this.modules) {
-        module = this.modules[name];
-      } else {
-        require = this.require.bind(this);
-        if (DefinitionContext.isAMD(callback)) {
-          depsModules = deps ? deps.map(require) : null;
-        } else {
-          depsModules = [require];
-        }
-        module = this.modules[name] = callback.apply(null, depsModules);
-      }
-      return module;
+  this._definitions[name] = function (require) {
+    var depsModules;
+    if (DefinitionContext.isAMD(callback)) {
+      depsModules = deps ? deps.map(require) : null;
+    } else {
+      depsModules = [require];
     }
-  });
+    return callback.apply(null, depsModules);
+  };
 };
 
 var __globalDefinitionContext__ = new DefinitionContext();

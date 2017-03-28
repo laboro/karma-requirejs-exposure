@@ -39,7 +39,7 @@ describe('karma preprocessor', function () {
       it('original local values', function () {
         expect(exposedModule.retrieve('five')).toBe(5);
         expect(exposedModule.retrieve('four')).toBe(4);
-        expect(exposedModule.retrieve('tree')).toBe(3);
+        expect(exposedModule.retrieve('three')).toBe(3);
         expect(module()).toBe(12);
       });
 
@@ -47,19 +47,19 @@ describe('karma preprocessor', function () {
         beforeEach(function () {
           exposedModule.substitute('five').by(3);
           exposedModule.substitute('four').by(2);
-          exposedModule.substitute('tree').by(1);
+          exposedModule.substitute('three').by(1);
         });
 
         it('check current values', function () {
           expect(exposedModule.retrieve('five')).toBe(3);
           expect(exposedModule.retrieve('four')).toBe(2);
-          expect(exposedModule.retrieve('tree')).toBe(1);
+          expect(exposedModule.retrieve('three')).toBe(1);
         });
 
         it('check original values', function () {
           expect(exposedModule.original('five')).toBe(5);
           expect(exposedModule.original('four')).toBe(4);
-          expect(exposedModule.original('tree')).toBe(3);
+          expect(exposedModule.original('three')).toBe(3);
         });
 
         it('affects module', function () {
@@ -69,10 +69,10 @@ describe('karma preprocessor', function () {
         it('recover original values', function () {
           exposedModule.recover('five');
           exposedModule.recover('four');
-          exposedModule.recover('tree');
+          exposedModule.recover('three');
           expect(exposedModule.retrieve('five')).toBe(5);
           expect(exposedModule.retrieve('four')).toBe(4);
-          expect(exposedModule.retrieve('tree')).toBe(3);
+          expect(exposedModule.retrieve('three')).toBe(3);
           expect(module()).toBe(12);
         });
       });
