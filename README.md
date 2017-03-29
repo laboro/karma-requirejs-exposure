@@ -1,5 +1,12 @@
 # karma-requirejs-exposure
 
+[![Build Status](https://img.shields.io/travis/laboro/karma-requirejs-exposure/master.svg)](https://travis-ci.org/laboro/karma-requirejs-exposure) 
+[![Coverage Status](https://coveralls.io/repos/github/laboro/karma-requirejs-exposure/badge.svg?branch=master)](https://coveralls.io/github/laboro/karma-requirejs-exposure?branch=master)
+
+[![dependencies Status](https://david-dm.org/laboro/karma-requirejs-exposure/status.svg)](https://david-dm.org/laboro/karma-requirejs-exposure)
+[![devDependencies Status](https://david-dm.org/laboro/karma-requirejs-exposure/dev-status.svg)](https://david-dm.org/laboro/karma-requirejs-exposure?type=dev)
+[![peerDependencies Status](https://david-dm.org/laboro/karma-requirejs-exposure/peer-status.svg)](https://david-dm.org/laboro/karma-requirejs-exposure?type=peer)
+
 > Karma's plugin which allows to test private functional of AMD-modules
 
 Contains:

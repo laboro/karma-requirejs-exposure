@@ -36,8 +36,10 @@ module.exports = function (config) {
     reporters: ['progress', 'coverage'],
 
     coverageReporter: {
-      type: 'html',
-      dir: 'build/logs/js-coverage/'
+      dir: 'build/coverage',
+      reporters: [
+        {type: 'lcov', subdir: 'report-lcov'}
+      ]
     },
 
     browserify: {
