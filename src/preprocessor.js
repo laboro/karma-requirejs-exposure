@@ -6,25 +6,52 @@ var path = require('path');
 var fs = require('fs');
 
 var injectionTmpl = _.template(fs.readFileSync(path.join(__dirname, '/injection.tmpl'), 'utf8'));
+var commonJSArgs = esprima.parse('function mock (require, exports, module) {}').body[0].params;
 
 /**
  * Generates exposure code and injects is into definition callback body
  *
- * @param {string} moduleName
- * @param {Object} dependency
- * @param {Object} callback
+ * @param {string} annotatedModuleName module name that is defined in module's annotation
+ * @param {Object} declarationNode
+ * @param {int} i index of declaration
  */
-function modifyDefinition (moduleName, dependency, callback) {
-  var vars = getVars(callback);
-  var injection = injectionTmpl({module: moduleName, vars: vars});
-  injection = esprima.parse(injection).body[0];
-  if (isUseStrict(callback.body.body[0])) {
-    callback.body.body.splice(1, 0, injection);
-  } else {
-    callback.body.body = [injection].concat(callback.body.body);
+function modifyDefinition (annotatedModuleName, declarationNode, i) {
+  var index, injectionLine, injectionCode;
+  var moduleName = _.find(declarationNode.arguments, {type: 'Literal'});
+  var dependency = _.find(declarationNode.arguments, {type: 'ArrayExpression'});
+  var callback = _.find(declarationNode.arguments, {type: 'FunctionExpression'});
+  var data = {
+    // if file has several definition calls, makes unique module name
+    module: (moduleName && moduleName.value) || (annotatedModuleName + (i || '')),
+    vars: getVars(callback),
+    isAMD: dependency || isAMD(callback)
+  };
+
+  if (data.isAMD) {
+    index = callback.params.push({type: 'Identifier', name: 'requirejsExposure'});
+    if (!dependency) {
+      // if module has no dependency, create empty array node
+      dependency = {type: 'ArrayExpression', elements: []};
+      declarationNode.arguments.splice(declarationNode.arguments.indexOf(callback), 0, dependency);
+    }
+    dependency.elements.splice(index - 1, 0, {type: 'Literal', value: 'requirejs-exposure'});
   }
-  var index = callback.params.push({type: 'Identifier', name: 'requirejsExposure'});
-  dependency.elements.splice(index - 1, 0, {type: 'Literal', value: 'requirejs-exposure'});
+
+  injectionLine = isUseStrict(callback.body.body[0]) ? 1 : 0;
+  injectionCode = injectionTmpl(data);
+  callback.body.body.splice(injectionLine, 0, esprima.parse(injectionCode).body[0]);
+}
+
+/**
+ * Check if module definition is in AMD format
+ *
+ * @param {Object} callback node of parsed module definition function
+ * @returns {boolean}
+ */
+function isAMD (callback) {
+  var params = callback.params;
+  return params.length === 0 ||
+    _.differenceWith(params, commonJSArgs.slice(0, params.length), _.isEqual).length > 0;
 }
 
 /**
@@ -43,25 +70,14 @@ function isUseStrict (node) {
  * such as define(), require() or requirejs()
  *
  * @param {Object} parsed
- * @returns {Array}
+ * @returns {Array} list of nodes with module declaration
  */
-function getDefinitions (parsed) {
+function getDefinitionNodes (parsed) {
   var result = [];
   estraverse.traverse(parsed, {
     enter: function (node) {
-      var callback, dependency, moduleName;
       if (node.type === 'CallExpression' && _.includes(['define', 'require', 'requirejs'], node.callee.name)) {
-        moduleName = _.find(node['arguments'], {type: 'Literal'});
-        dependency = _.find(node['arguments'], {type: 'ArrayExpression'});
-        callback = _.find(node['arguments'], {type: 'FunctionExpression'});
-        if (callback) {
-          if (!dependency) {
-            // if module has no dependency, create empty array node and append it before callback argument
-            dependency = {type: 'ArrayExpression', elements: []};
-            node['arguments'].splice(node['arguments'].indexOf(callback), 0, dependency);
-          }
-          result.push([moduleName, dependency, callback]);
-        }
+        result.push(node);
         return estraverse.VisitorOption.Skip;
       } else if (node.type !== 'Program' && node.type !== 'ExpressionStatement') {
         return estraverse.VisitorOption.Skip;
@@ -121,11 +137,7 @@ function getVars (parsed) {
 function injectExposure (content, options) {
   var parsed = esprima.parse(content);
   var moduleName = options.moduleName;
-  _.each(getDefinitions(parsed), function (args, i) {
-    // if file has several definition calls, makes unique module name
-    args[0] = (args[0] && args[0].value) || (moduleName + (i || ''));
-    modifyDefinition.apply(null, args);
-  });
+  _.each(getDefinitionNodes(parsed), _.partial(modifyDefinition, moduleName));
   try {
     content = escodegen.generate(parsed);
   } catch (e) {

@@ -24,7 +24,7 @@ var definitionUtils = {
    */
   isNamed: function (moduleDefinition) {
     return moduleDefinition
-      .match(/define\(\s*'[\w\-_\/]+'\s*,/);
+      .match(/define\(\s*'[\w\-_/]+'\s*,/);
   }
 };
 

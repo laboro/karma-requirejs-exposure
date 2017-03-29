@@ -1,15 +1,16 @@
-/* global __globalDefinitionContext__ */
+/* global __globalDefinitionContext__, definitionUtils */
 var path = require('path');
 var fs = require('fs');
 var using = require('jasmine-data-provider');
 var preprocessor = require('../src/preprocessor')();
 var modules = {
+  'named-amddeps': fs.readFileSync(path.join(__dirname, '/fixture/named-amddeps.js'), 'utf8'),
+  'named-commonjsdeps': fs.readFileSync(path.join(__dirname, '/fixture/named-commonjsdeps.js'), 'utf8'),
   'named-nodeps': fs.readFileSync(path.join(__dirname, '/fixture/named-nodeps.js'), 'utf8'),
   'noname-amddeps': fs.readFileSync(path.join(__dirname, '/fixture/noname-amddeps.js'), 'utf8'),
-  // 'noname-commonjsdeps': fs.readFileSync(path.join(__dirname, '/fixture/noname-commonjsdeps.js'), 'utf8'),
+  'noname-commonjsdeps': fs.readFileSync(path.join(__dirname, '/fixture/noname-commonjsdeps.js'), 'utf8'),
   'noname-nodeps': fs.readFileSync(path.join(__dirname, '/fixture/noname-nodeps.js'), 'utf8')
 };
-
 
 describe('karma preprocessor', function () {
   using(modules, function (initialModuleDefinition, moduleType) {

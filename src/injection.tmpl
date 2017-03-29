@@ -1,4 +1,9 @@
-requirejsExposure.register("<%= module %>", {
+<% if (isAMD) { %>
+    requirejsExposure
+<% } else { %>
+    require('requirejs-exposure')
+<% } %>
+.register("<%= module %>", {
   <% _.each(vars, function (name) { %>
     get<%= name %>: function () {return <%= name %>;},
     set<%= name %>: function () {<%= name %> = arguments[0];},

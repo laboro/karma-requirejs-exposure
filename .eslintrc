@@ -2,7 +2,7 @@
   "env": {
     "node": true
   },
-  "extends": "plugin:requirejs/recommended",
+  "extends": "standard",
   "plugins": [
     "requirejs"
   ],
