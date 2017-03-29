@@ -28,6 +28,7 @@
   "devDependencies": {
     "brfs": "^1.4.3",
     "browserify": "^14.1.0",
+    "browserify-istanbul": "^2.0.0",
     "eslint": "^3.18.0",
     "eslint-config-standard": "^7.1.0",
     "eslint-plugin-promise": "^3.5.0",

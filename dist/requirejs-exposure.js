@@ -30,9 +30,6 @@ define('requirejs-exposure', function () {
 
     _set: function (variable, value) {
       var setterMethod = 'set' + variable;
-      if (typeof this.obj[setterMethod] !== 'function') {
-        throw new Error('Module "' + this.moduleName + '" does\'t have local variable "' + variable + '" ');
-      }
       this.obj[setterMethod](value);
     },
 

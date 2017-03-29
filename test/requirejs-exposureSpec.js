@@ -40,6 +40,11 @@ describe('karma preprocessor', function () {
         expect(module()).toBe(12);
       });
 
+      it('throw error on undefined variables', function () {
+        expect(function () { exposedModule.backup('two'); }).toThrow();
+        expect(function () { exposedModule.substitute('six'); }).toThrow();
+      });
+
       describe('local values substitution', function () {
         beforeEach(function () {
           exposedModule.substitute('five').by(3);
