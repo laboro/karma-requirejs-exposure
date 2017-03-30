@@ -1,4 +1,4 @@
-define(function (require) {
+define('named-commonjsdeps', function (require) {
   'use strict';
 
   var five = 5;
@@ -6,7 +6,7 @@ define(function (require) {
   var three = require('number-three');
 
   /**
-   * @export noname-commonjsdeps
+   * @export named-commonjsdeps
    */
   return function () {
     return five + four + three;

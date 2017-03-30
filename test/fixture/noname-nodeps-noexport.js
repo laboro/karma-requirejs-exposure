@@ -5,9 +5,6 @@ define(function () {
   var four = 4;
   var three = 3;
 
-  /**
-   * @export noname-nodeps
-   */
   return function () {
     return five + four + three;
   };

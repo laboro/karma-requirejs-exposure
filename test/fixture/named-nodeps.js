@@ -3,12 +3,12 @@ define('named-nodeps', function () {
 
   var five = 5;
   var four = 4;
-  var tree = 3;
+  var three = 3;
 
   /**
-   * @export noname-nodeps
+   * @export named-nodeps
    */
   return function () {
-    return five + four + tree;
+    return five + four + three;
   };
 });

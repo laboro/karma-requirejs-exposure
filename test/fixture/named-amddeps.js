@@ -1,12 +1,10 @@
-define(function () {
+define('named-amddeps', ['number-four', 'number-three'], function (four, three) {
   'use strict';
 
   var five = 5;
-  var four = 4;
-  var three = 3;
 
   /**
-   * @export noname-nodeps
+   * @export named-amddeps
    */
   return function () {
     return five + four + three;

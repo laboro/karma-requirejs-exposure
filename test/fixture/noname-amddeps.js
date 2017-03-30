@@ -1,4 +1,4 @@
-define(['number-four', 'number-tree'], function (four, tree) {
+define(['number-four', 'number-three'], function (four, three) {
   'use strict';
 
   var five = 5;
@@ -7,6 +7,6 @@ define(['number-four', 'number-tree'], function (four, tree) {
    * @export noname-amddeps
    */
   return function () {
-    return five + four + tree;
+    return five + four + three;
   };
 });
