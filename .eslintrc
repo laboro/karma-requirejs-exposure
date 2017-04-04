@@ -1,0 +1,15 @@
+{
+  "env": {
+    "node": true
+  },
+  "extends": "standard",
+  "plugins": [
+    "requirejs"
+  ],
+  "rules": {
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+  }
+}

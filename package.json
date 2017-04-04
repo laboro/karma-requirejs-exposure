@@ -1,7 +1,8 @@
 {
   "name": "karma-requirejs-exposure",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Karma plugin. Injects code to RequireJS module in order to expose private data.",
+  "license": "MIT",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
@@ -13,19 +14,44 @@
     "requirejs"
   ],
   "dependencies": {
-      "escodegen": "0.0.23",
-      "esprima": "~1.0.2",
-      "estraverse": "~0.0.4",
-      "lodash": "~1.1"
+    "escodegen": "^1.8.1",
+    "esprima": "^3.1.3",
+    "estraverse": "^4.2.0",
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "karma": ">=0.9",
-    "karma-requirejs": ">=0.1.0"
+    "karma-requirejs": ">=0.1.0",
+    "requirejs": ">=2.1.0"
   },
-  "license": "MIT",
-  "contributors": [],
-  "readme": "ERROR: No README data found!",
   "readmeFilename": "README.md",
+  "devDependencies": {
+    "brfs": "^1.4.3",
+    "browserify": "^14.1.0",
+    "browserify-istanbul": "^2.0.0",
+    "coveralls": "^2.12.0",
+    "eslint": "^3.18.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-requirejs": "^3.1.1",
+    "eslint-plugin-standard": "^2.1.1",
+    "istanbul": "^0.4.5",
+    "jasmine-core": "^2.5.2",
+    "jasmine-data-provider": "^2.2.0",
+    "karma": "^1.5.0",
+    "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-requirejs": "^1.1.0",
+    "requirejs": "^2.3.3",
+    "watchify": "^3.9.0"
+  },
+  "scripts": {
+    "pretest": "./node_modules/.bin/eslint ./**/*.js",
+    "test": "./node_modules/.bin/karma start --single-run"
+  },
   "bugs": {
     "url": "https://github.com/laboro/karma-exposure-preprocessor/issues"
   }

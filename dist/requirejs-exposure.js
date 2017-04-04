@@ -1,5 +1,3 @@
-/* global define */
-/* jshint browser:true */
 define('requirejs-exposure', function () {
   'use strict';
 
@@ -13,13 +11,28 @@ define('requirejs-exposure', function () {
    * Wrapper over exposure module, provides API for private data manipulation
    *
    * @param {Object} obj - exposure requirejs module
+   * @param {string} moduleName - name of module
    */
-  var Exposure = function (obj) {
+  var Exposure = function (obj, moduleName) {
     this.obj = obj;
     this.ns = {};
+    this.moduleName = moduleName;
   };
 
   Exposure.prototype = {
+    _get: function (variable) {
+      var getterMethod = 'get' + variable;
+      if (typeof this.obj[getterMethod] !== 'function') {
+        throw new Error('Module "' + this.moduleName + '" does\'t have local variable "' + variable + '" ');
+      }
+      return this.obj[getterMethod]();
+    },
+
+    _set: function (variable, value) {
+      var setterMethod = 'set' + variable;
+      this.obj[setterMethod](value);
+    },
+
     /**
      * Fetches value of private variable
      *
@@ -30,7 +43,7 @@ define('requirejs-exposure', function () {
       if (!this.ns.hasOwnProperty(variable)) {
         this.backup(variable);
       }
-      return this.obj['get' + variable]();
+      return this._get(variable);
     },
 
     /**
@@ -49,7 +62,7 @@ define('requirejs-exposure', function () {
      * @param {string} variable - name of variable
      */
     backup: function (variable) {
-      this.ns[variable] = this.obj['get' + variable]();
+      this.ns[variable] = this._get(variable);
     },
 
     /**
@@ -59,7 +72,7 @@ define('requirejs-exposure', function () {
      */
     recover: function (variable) {
       if (this.ns.hasOwnProperty(variable)) {
-        this.obj['set' + variable](this.ns[variable]);
+        this._set(variable, this.ns[variable]);
       }
     },
 
@@ -75,8 +88,8 @@ define('requirejs-exposure', function () {
         this.backup(variable);
       }
       return {
-        by: function(value){
-          self.obj['set' + variable](value);
+        by: function (value) {
+          self._set(variable, value);
         }
       };
     }
@@ -84,10 +97,13 @@ define('requirejs-exposure', function () {
 
   return {
     register: function (moduleName, obj) {
-      modules[moduleName] = new Exposure(obj);
+      modules[moduleName] = new Exposure(obj, moduleName);
     },
+
     disclose: function (moduleName) {
       return modules[moduleName];
-    }
+    },
+
+    Exposure: Exposure
   };
 });
